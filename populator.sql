@@ -1,27 +1,3 @@
--- CREATE TABLE `Affiliation` (
---     `Affiliation_Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
---     `Name` TEXT NOT NULL
--- );
-
--- INSERT INTO Affiliation VALUES (null, "Justice League");
--- INSERT INTO Affiliation VALUES (null, "X-Men");
-
-
--- CREATE TABLE `Superhero` (
---     `Superhero_Id`    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
---     `Name`    TEXT NOT NULL,
---     `Gender`    TEXT NOT NULL,
---     `Secret_Id` TEXT NOT NULL,
---     `Affiliation_Id` TEXT,
---     FOREIGN KEY(`Affiliation_id`) REFERENCES `Affiliation` (`Affiliation_Id`)
--- );
-
-DELETE FROM employee_training;
-DELETE FROM training;
-DELETE FROM computer;
-DELETE FROM employee;
-DELETE FROM department;
-
 DROP TABLE IF EXISTS employee_training;
 DROP TABLE IF EXISTS training;
 DROP TABLE IF EXISTS computer;
@@ -93,3 +69,81 @@ INSERT INTO employee_training VALUES(null, 4, 2);
 INSERT INTO employee_training VALUES(null, 4, 3);
 
 -- customer data
+
+DROP TABLE IF EXISTS user_order;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS user_payment;
+DROP TABLE IF EXISTS payment;
+DROP TABLE IF EXISTS category;
+DROP TABLE IF EXISTS user;
+
+CREATE TABLE `user` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `first_name` TEXT NOT NULL,
+    `last_name` TEXT NOT NULL,
+    `created_date` TEXT NOT NULL,
+    `last_activity_date` TEXT NOT NULL
+);
+
+INSERT INTO user VALUES (null, "Nathan", "Taylor", "2018-07-21", "2018-07-21");
+INSERT INTO user VALUES (null, "Jake", "Turner", "2018-07-21", "2018-07-22");
+
+CREATE TABLE `category` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `type` TEXT NOT NULL
+);
+
+INSERT INTO category VALUES (null, "music");
+INSERT INTO category VALUES (null, "tech");
+INSERT INTO category VALUES (null, "games");
+
+CREATE TABLE `payment` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `name` TEXT NOT NULL,
+    `type` TEXT NOT NULL,
+    `number` INTEGER NOT NULL
+);
+
+INSERT INTO payment VALUES (null, "checking", "bank", 12515);
+INSERT INTO payment VALUES (null, "debit", "card", 1241248);
+INSERT INTO payment VALUES (null, "credit", "card", 12312);
+
+CREATE TABLE `user_payment` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `user_id` TEXT,
+    `payment_id` TEXT,
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+    FOREIGN KEY (`payment_id`) REFERENCES `payment` (`id`)
+);
+
+INSERT INTO user_payment VALUES (null, 1, 1);
+INSERT INTO user_payment VALUES (null, 1, 2);
+INSERT INTO user_payment VALUES (null, 2, 3);
+
+CREATE TABLE `product` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `category_id` TEXT,
+    `seller_id` TEXT,
+    `title` TEXT NOT NULL,
+    `price` INTEGER NOT NULL,
+    `description` TEXT NOT NULL,
+    FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
+    FOREIGN KEY (`seller_id`) REFERENCES `user` (`id`)
+);
+
+INSERT INTO product VALUES (null, 1, 1, "Guitar", 300, "fender strat");
+INSERT INTO product VALUES (null, 3, 2, "Xbox", 300, "game console");
+INSERT INTO product VALUES (null, 2, 2, "Computer", 300, "pc");
+
+CREATE TABLE `user_order` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `customer_id` TEXT,
+    `product_id` TEXT,
+    `payment_id` TEXT,
+    FOREIGN KEY (`customer_id`) REFERENCES `user` (`id`)
+    FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
+    FOREIGN KEY (`payment_id`) REFERENCES `payment` (`id`)
+);
+
+INSERT INTO user_order VALUES (null, 2, 1, 3);
+INSERT INTO user_order VALUES (null, 1, 3, null);
